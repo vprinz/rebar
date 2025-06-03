@@ -6,6 +6,6 @@ export default {
     content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}', '../src/plugins/**/*.{vue,js,ts,jsx,tsx}'],
     plugins: [daisyui],
     daisyui: {
-        themes: ['light', 'dark', 'cupcake'],
+        themes: ['light', 'dark', 'bumblebee'],
     },
 };
