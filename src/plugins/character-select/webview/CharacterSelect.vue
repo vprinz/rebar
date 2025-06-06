@@ -3,7 +3,6 @@
         <div class="rounded-box w-full max-w-3xl bg-white p-6 shadow-2xl">
             <h2 class="mb-6 text-center text-3xl font-semibold">Select Character</h2>
 
-            <!-- Таблица -->
             <div class="overflow-x-auto">
                 <table class="table">
                     <!-- head -->
@@ -27,12 +26,9 @@
                             </th>
                             <td>
                                 <div class="flex items-center gap-3">
-                                    <div class="avatar">
-                                        <div class="mask mask-squircle h-12 w-12">
-                                            <img
-                                                src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                alt="Avatar Tailwind CSS Component"
-                                            />
+                                    <div class="avatar placeholder">
+                                        <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                                            <span>HH</span>
                                         </div>
                                     </div>
                                     <div>
@@ -45,7 +41,7 @@
                             </td>
                             <td>13</td>
                             <th>
-                                <button class="btn btn-ghost btn-xs">spawn</button>
+                                <button class="btn btn-primary btn-xs">spawn</button>
                             </th>
                         </tr>
                         <!-- row 2 -->
@@ -57,12 +53,9 @@
                             </th>
                             <td>
                                 <div class="flex items-center gap-3">
-                                    <div class="avatar">
-                                        <div class="mask mask-squircle h-12 w-12">
-                                            <img
-                                                src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                                                alt="Avatar Tailwind CSS Component"
-                                            />
+                                    <div class="avatar placeholder">
+                                        <div class="bg-neutral text-neutral-content w-12 rounded-full">
+                                            <span>BW</span>
                                         </div>
                                     </div>
                                     <div>
@@ -75,19 +68,16 @@
                             </td>
                             <td>4</td>
                             <th>
-                                <button class="btn btn-ghost btn-xs">spawn</button>
+                                <button class="btn btn-primary btn-xs">spawn</button>
                             </th>
                         </tr>
                     </tbody>
                 </table>
                 <div class="flex justify-end gap-3 mt-4">
-                    <button class="btn btn-primary btn-sm">Add new character</button>
-                    <button class="btn btn-link btn-sm text-red-500">Delete</button>
+                    <button class="btn btn-ghost btn-sm">Add new character</button>
+                    <button disabled class="btn btn-ghost btn-sm text-red-500">Delete</button>
                 </div>
             </div>
-            <!-- Главная кнопка -->
-
-            <!-- Вторичные кнопки -->
         </div>
     </div>
 </template>
