@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import { Character } from '@Shared/types';
-import { useEvents } from '@Composables/useEvents';
+import { Character } from '@Shared/types/index.js';
+import { useEvents } from '@Composables/useEvents.js';
 
-import { CharacterSelectEvents } from '../shared/characterSelectEvents';
+import { CharacterSelectEvents } from '../shared/characterSelectEvents.js';
 
 const events = useEvents();
 const characters = ref<Character[]>([]);

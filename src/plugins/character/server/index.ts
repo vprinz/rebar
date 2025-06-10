@@ -3,7 +3,7 @@ import { useRebar } from '@Server/index.js';
 import { Character } from '@Shared/types/character.js';
 import { CollectionNames } from '@Server/document/shared.js';
 
-import { CharacterSelectEvents } from '../shared/characterSelectEvents.js';
+import { CharacterSelectEvents } from '@Plugins/character/shared/characterSelectEvents.js';
 
 const Rebar = useRebar();
 const api = Rebar.useApi();
