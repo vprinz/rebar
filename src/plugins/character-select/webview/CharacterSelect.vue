@@ -1,23 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-// Пример данных (в реальности будет приходить с сервера/стейта)
-const characters = ref([
-    {
-        id: 1,
-        name: 'Hart Hagerty',
-        lastActive: 'May 31, 10:32',
-        level: 13,
-        initials: 'HH',
-    },
-    {
-        id: 2,
-        name: 'Brice Swyre',
-        lastActive: 'June 7, 15:36',
-        level: 4,
-        initials: 'BW',
-    },
-]);
+import { Character } from '@Shared/types';
+import { useEvents } from '@Composables/useEvents';
+
+import { CharacterSelectEvents } from '../shared/characterSelectEvents';
+
+const events = useEvents();
+const characters = ref<Character[]>([]);
+
+function handlePopulateCharacters(_characters: Character[]) {
+    characters.value = _characters;
+}
+
+events.on(CharacterSelectEvents.toClient.populateCharacters, handlePopulateCharacters);
 </script>
 
 <template>
