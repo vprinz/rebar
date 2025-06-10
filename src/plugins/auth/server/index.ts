@@ -15,6 +15,7 @@ const loggedInPlayers: Map<number, string> = new Map<number, string>();
 const spawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
 
 async function handleConnect(player: alt.Player) {
+    player.spawn(spawnPosition);
     player.dimension = player.id + 1;
     ServerConfig.set('hideMinimapInPage', true);
     player.emit(AuthEvents.toClient.cameraCreate);
@@ -29,15 +30,10 @@ async function handleDisconnect(player: alt.Player) {
 function setAccount(player: alt.Player, account: Account) {
     Rebar.document.account.useAccountBinder(player).bind(account);
     Rebar.player.useWebview(player).hide('Auth');
-    Rebar.player.useNative(player).invoke('triggerScreenblurFadeOut', 1000);
-    player.dimension = 0;
-    player.model = 'mp_m_freemode_01';
-    player.emit(AuthEvents.toClient.cameraDestroy);
     loggedInPlayers[player.id] = account._id;
     for (let cb of loginCallbacks) {
         cb(player);
     }
-    player.spawn(spawnPosition);
 }
 
 async function handleRegister(player: alt.Player, email: string, password: string): Promise<AuthResult> {
