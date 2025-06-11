@@ -97,8 +97,11 @@ const onSubmit = handleSubmit((values) => {
         </div>
 
         <div class="overflow-x-auto">
-            <div class="mt-4 flex justify-center gap-3">
+            <div class="mt-4 flex flex-col items-center gap-3">
                 <button type="submit" class="btn btn-primary">Save and Spawn</button>
+                <button @click="$emit('navigate', 'character-list')" type="button" class="btn btn-sm btn-ghost">
+                    Back
+                </button>
             </div>
         </div>
     </form>
