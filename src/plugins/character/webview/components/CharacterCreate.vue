@@ -4,6 +4,8 @@ import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
 import { CharacterEvents } from '../../shared/characterEvents';
 import { useEvents } from '@Composables/useEvents.js';
+import { Character } from '@Shared/types/index.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 
 const events = useEvents();
 
@@ -34,17 +36,21 @@ const schema = yup.object().shape({
 const { handleSubmit, errors } = useForm({ validationSchema: schema });
 const { value: firstName } = useField('firstName');
 const { value: lastName } = useField('lastName');
+const serverError = ref('');
 
 function selectSkin(name: string) {
     selectedSkin.value = name;
 }
 
 const onSubmit = handleSubmit(async (values) => {
-    const data = {
+    const data: Pick<Character, 'name' | 'skin'> = {
+        name: `${values.firstName} ${values.lastName}`,
         skin: selectedSkin.value,
-        ...values,
     };
-    const result = await events.emitServerRpc(CharacterEvents.toServer.createCharacter, data);
+    const result: EventResult = await events.emitServerRpc(CharacterEvents.toServer.createCharacter, data);
+    if (!result.success) {
+        serverError.value = result.error || 'An error occurred while creating the character';
+    }
 });
 </script>
 
@@ -101,7 +107,10 @@ const onSubmit = handleSubmit(async (values) => {
         </div>
 
         <div class="overflow-x-auto">
-            <div class="mt-4 flex flex-col items-center gap-3">
+            <div class="flex flex-col items-center gap-3">
+                <div v-if="serverError" class="mb-2 text-center text-xs text-red-500">
+                    {{ serverError }}
+                </div>
                 <button type="submit" class="btn btn-primary">Save and Spawn</button>
                 <button @click="$emit('navigate', 'character-list')" type="button" class="btn btn-sm btn-ghost">
                     Back
