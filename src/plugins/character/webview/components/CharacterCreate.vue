@@ -2,16 +2,20 @@
 import { ref } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
+import { CharacterEvents } from '../../shared/characterEvents';
+import { useEvents } from '@Composables/useEvents.js';
 
-const defaultPedModel = 'u_m_m_aldinapoli';
-const selectedPedModel = ref(defaultPedModel);
+const events = useEvents();
 
-const pedModels = [
-    { name: 'u_m_m_aldinapoli', image: '/images/ped-models/u_m_m_aldinapoli.webp' },
-    { name: 'ig_mrs_thornhill', image: '/images/ped-models/ig_mrs_thornhill.webp' },
-    { name: 'player_one', image: '/images/ped-models/player_one.webp' },
-    { name: 'u_f_m_promourn_01', image: '/images/ped-models/u_f_m_promourn_01.webp' },
-    { name: 'u_m_y_caleb', image: '/images/ped-models/u_m_y_caleb.webp' },
+const defaultSkin = 'u_m_m_aldinapoli';
+const selectedSkin = ref(defaultSkin);
+
+const skins = [
+    { name: 'u_m_m_aldinapoli', image: '/images/skins/u_m_m_aldinapoli.webp' },
+    { name: 'ig_mrs_thornhill', image: '/images/skins/ig_mrs_thornhill.webp' },
+    { name: 'player_one', image: '/images/skins/player_one.webp' },
+    { name: 'u_f_m_promourn_01', image: '/images/skins/u_f_m_promourn_01.webp' },
+    { name: 'u_m_y_caleb', image: '/images/skins/u_m_y_caleb.webp' },
 ];
 
 const schema = yup.object().shape({
@@ -31,16 +35,16 @@ const { handleSubmit, errors } = useForm({ validationSchema: schema });
 const { value: firstName } = useField('firstName');
 const { value: lastName } = useField('lastName');
 
-function selectPedModel(name: string) {
-    selectedPedModel.value = name;
+function selectSkin(name: string) {
+    selectedSkin.value = name;
 }
 
-const onSubmit = handleSubmit((values) => {
+const onSubmit = handleSubmit(async (values) => {
     const data = {
-        skin: selectedPedModel.value,
+        skin: selectedSkin.value,
         ...values,
     };
-    console.log(data);
+    const result = await events.emitServerRpc(CharacterEvents.toServer.createCharacter, data);
 });
 </script>
 
@@ -81,17 +85,17 @@ const onSubmit = handleSubmit((values) => {
 
         <div class="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
             <div
-                v-for="pedModel in pedModels"
-                :key="pedModel.name"
-                @click="selectPedModel(pedModel.name)"
+                v-for="skin in skins"
+                :key="skin.name"
+                @click="selectSkin(skin.name)"
                 class="card bg-base-100 cursor-pointer border-2 shadow-md transition hover:shadow-xl"
                 :class="{
-                    'border-primary': selectedPedModel === pedModel.name,
-                    'border-transparent': selectedPedModel !== pedModel.name,
+                    'border-primary': selectedSkin === skin.name,
+                    'border-transparent': selectedSkin !== skin.name,
                 }"
             >
                 <figure class="px-4 pt-4">
-                    <img :src="pedModel.image" alt="PedModel" class="h-40 object-contain" />
+                    <img :src="skin.image" alt="Skin" class="h-40 object-contain" />
                 </figure>
             </div>
         </div>

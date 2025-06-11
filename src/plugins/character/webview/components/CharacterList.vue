@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { Character } from '@Shared/types/index.js';
 import { useEvents } from '@Composables/useEvents.js';
 
-import { CharacterSelectEvents } from '../../shared/characterSelectEvents.js';
+import { CharacterEvents } from '../../shared/characterEvents.js';
 
 const events = useEvents();
 const characters = ref<Character[]>([]);
@@ -13,7 +13,7 @@ function handlePopulateCharacters(_characters: Character[]) {
     characters.value = _characters;
 }
 
-events.on(CharacterSelectEvents.toClient.populateCharacters, handlePopulateCharacters);
+events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters);
 </script>
 
 <template>
