@@ -1,8 +1,8 @@
 import * as alt from 'alt-server';
 import { useRebar } from '@Server/index.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 
 import { AuthEvents } from '../shared/authEvents.js';
-import { AuthResult } from '../shared/types.js';
 import { Account } from '@Shared/types/account.js';
 
 const Rebar = useRebar();
@@ -36,7 +36,7 @@ function setAccount(player: alt.Player, account: Account) {
     }
 }
 
-async function handleRegister(player: alt.Player, email: string, password: string): Promise<AuthResult> {
+async function handleRegister(player: alt.Player, email: string, password: string): Promise<EventResult> {
     console.log(email, password);
     let account = await db.get<Account>({ email }, Rebar.database.CollectionNames.Accounts);
     if (account) {
@@ -61,7 +61,7 @@ async function handleRegister(player: alt.Player, email: string, password: strin
     return { success: true };
 }
 
-async function handleLogin(player: alt.Player, email: string, password: string): Promise<AuthResult> {
+async function handleLogin(player: alt.Player, email: string, password: string): Promise<EventResult> {
     const account = await db.get<Account>({ email }, Rebar.database.CollectionNames.Accounts);
     if (!account) {
         return { success: false, error: 'Account not found' };
