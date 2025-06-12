@@ -1,6 +1,6 @@
 import * as alt from 'alt-server';
 import * as Utility from '../utility/index.js';
-import { Character, Account } from '@Shared/types/index.js';
+import { Account, Character } from '@Shared/types/index.js';
 import { useDatabase } from '@Server/database/index.js';
 import { CollectionNames, KeyChangeCallback } from './shared.js';
 import { usePermissionProxy } from '@Server/systems/permissions/permissionProxy.js';
@@ -153,9 +153,9 @@ export function useAccount(player: alt.Player) {
      * @return {Promise<Character[]>}
      */
     async function getCharacters(): Promise<Character[]> {
-        const data = player.getMeta(sessionKey) as Character;
-        const results = await db.getMany({ account_id: data._id }, CollectionNames.Characters);
-        return results as Character[];
+        const accountData = get();
+        if (!accountData || !accountData._id) return [];
+        return await db.getMany<Character>({ account_id: accountData._id }, CollectionNames.Characters);
     }
 
     /**
