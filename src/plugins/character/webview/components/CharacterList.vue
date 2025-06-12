@@ -13,6 +13,14 @@ function handlePopulateCharacters(_characters: Character[]) {
     characters.value = _characters;
 }
 
+function getInitials(name: string): string {
+    return name
+        .split(' ')
+        .map((word) => word[0])
+        .join('')
+        .toUpperCase();
+}
+
 events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters);
 </script>
 
@@ -26,14 +34,11 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                     <tr>
                         <th></th>
                         <th>Name</th>
-                        <th>Last active</th>
-                        <th>Level</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- row 1 -->
-                    <tr>
+                    <tr v-for="character in characters">
                         <th>
                             <label>
                                 <input type="checkbox" class="checkbox" />
@@ -43,41 +48,14 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                             <div class="flex items-center gap-3">
                                 <div class="avatar placeholder">
                                     <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                                        <span>HH</span>
+                                        <span>{{ getInitials(character.name) }}</span>
                                     </div>
                                 </div>
                                 <div>
-                                    <div class="font-bold">Hart Hagerty</div>
+                                    <div class="font-bold">{{ character.name }}</div>
                                 </div>
                             </div>
                         </td>
-                        <td>May 31, 10:32</td>
-                        <td>13</td>
-                        <th>
-                            <button class="btn btn-primary btn-xs">spawn</button>
-                        </th>
-                    </tr>
-                    <!-- row 2 -->
-                    <tr>
-                        <th>
-                            <label>
-                                <input type="checkbox" class="checkbox" />
-                            </label>
-                        </th>
-                        <td>
-                            <div class="flex items-center gap-3">
-                                <div class="avatar placeholder">
-                                    <div class="bg-neutral text-neutral-content w-12 rounded-full">
-                                        <span>BW</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="font-bold">Brice Swyre</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td>June 7, 15:36</td>
-                        <td>4</td>
                         <th>
                             <button class="btn btn-primary btn-xs">spawn</button>
                         </th>
