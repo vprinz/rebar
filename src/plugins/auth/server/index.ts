@@ -12,10 +12,7 @@ const db = Rebar.database.useDatabase();
 const loginCallbacks: Array<(player: alt.Player) => void> = [];
 const loggedInPlayers: Map<number, string> = new Map<number, string>();
 
-const spawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
-
 async function handleConnect(player: alt.Player) {
-    player.spawn(spawnPosition);
     player.dimension = player.id + 1;
     ServerConfig.set('hideMinimapInPage', true);
     player.emit(AuthEvents.toClient.cameraCreate);

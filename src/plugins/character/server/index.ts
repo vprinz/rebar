@@ -14,17 +14,10 @@ const db = Rebar.database.useDatabase();
 const spawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
 
 async function showCharacterSelection(player: alt.Player) {
-    const accDocument = Rebar.document.account.useAccount(player);
-    if (!accDocument) {
-        player.kick('Account not found');
-        return;
-    }
+    const accDocument = getValidAccountOrKick(player);
+    if (!accDocument) return;
 
-    const characters = await db.getMany<Character>(
-        { account_id: accDocument.getField('_id') },
-        CollectionNames.Characters,
-    );
-
+    const characters = await accDocument.getCharacters();
     const webview = Rebar.player.useWebview(player);
     webview.show('Character', 'page');
     webview.emit(CharacterEvents.toClient.populateCharacters, characters);
@@ -34,11 +27,8 @@ async function handleCharacterCreation(
     player: alt.Player,
     characterData: Pick<Character, 'name' | 'skin'>,
 ): Promise<EventResult> {
-    const accDocument = Rebar.document.account.useAccount(player);
-    if (!accDocument) {
-        player.kick('Account not found');
-        return { success: false, error: 'Account not found' };
-    }
+    const accDocument = getValidAccountOrKick(player);
+    if (!accDocument) return { success: false, error: 'Account not found' };
 
     const _id = await db.create<Character>(
         { account_id: accDocument.getField('_id'), name: characterData.name, skin: characterData.skin },
@@ -49,22 +39,38 @@ async function handleCharacterCreation(
         return { success: false, error: 'Character creation failed' };
     }
 
-    // Spawn
+    await handleSpawnCharacter(player, _id);
+
+    return { success: true };
+}
+
+async function handleSpawnCharacter(player: alt.Player, characterId: string) {
+    const accDocument = getValidAccountOrKick(player);
+    if (!accDocument.isValid()) return;
+
     const character = await db.get<Character>(
         {
             account_id: accDocument.getField('_id'),
-            _id: _id,
+            _id: characterId,
         },
         CollectionNames.Characters,
     );
+
     Rebar.document.character.useCharacterBinder(player).bind(character);
     Rebar.player.useWebview(player).hide('Character');
     Rebar.player.useNative(player).invoke('triggerScreenblurFadeOut', 1000);
     player.dimension = 0;
     player.spawn(spawnPosition);
     player.emit(AuthEvents.toClient.cameraDestroy);
+}
 
-    return { success: true };
+function getValidAccountOrKick(player: alt.Player) {
+    const accDocument = Rebar.document.account.useAccount(player);
+    if (!accDocument.isValid()) {
+        player.kick('Account not found');
+        return undefined;
+    }
+    return accDocument;
 }
 
 async function init() {
