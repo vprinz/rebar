@@ -79,6 +79,7 @@ async function init() {
     auth.onLogin(showCharacterSelection);
 
     alt.onRpc(CharacterEvents.toServer.createCharacter, handleCharacterCreation);
+    alt.onRpc(CharacterEvents.toServer.spawnCharacter, handleSpawnCharacter);
 }
 
 await init();
