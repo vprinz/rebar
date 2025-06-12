@@ -1,4 +1,4 @@
-export type AuthResult = {
+export type EventResult = {
     success: boolean;
     error?: string;
 };

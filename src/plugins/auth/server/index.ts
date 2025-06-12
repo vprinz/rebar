@@ -1,8 +1,8 @@
 import * as alt from 'alt-server';
 import { useRebar } from '@Server/index.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 
 import { AuthEvents } from '../shared/authEvents.js';
-import { AuthResult } from '../shared/types.js';
 import { Account } from '@Shared/types/account.js';
 
 const Rebar = useRebar();
@@ -11,8 +11,6 @@ const db = Rebar.database.useDatabase();
 
 const loginCallbacks: Array<(player: alt.Player) => void> = [];
 const loggedInPlayers: Map<number, string> = new Map<number, string>();
-
-const spawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
 
 async function handleConnect(player: alt.Player) {
     player.dimension = player.id + 1;
@@ -29,18 +27,13 @@ async function handleDisconnect(player: alt.Player) {
 function setAccount(player: alt.Player, account: Account) {
     Rebar.document.account.useAccountBinder(player).bind(account);
     Rebar.player.useWebview(player).hide('Auth');
-    Rebar.player.useNative(player).invoke('triggerScreenblurFadeOut', 1000);
-    player.dimension = 0;
-    player.model = 'mp_m_freemode_01';
-    player.emit(AuthEvents.toClient.cameraDestroy);
     loggedInPlayers[player.id] = account._id;
     for (let cb of loginCallbacks) {
         cb(player);
     }
-    player.spawn(spawnPosition);
 }
 
-async function handleRegister(player: alt.Player, email: string, password: string): Promise<AuthResult> {
+async function handleRegister(player: alt.Player, email: string, password: string): Promise<EventResult> {
     console.log(email, password);
     let account = await db.get<Account>({ email }, Rebar.database.CollectionNames.Accounts);
     if (account) {
@@ -65,7 +58,7 @@ async function handleRegister(player: alt.Player, email: string, password: strin
     return { success: true };
 }
 
-async function handleLogin(player: alt.Player, email: string, password: string): Promise<AuthResult> {
+async function handleLogin(player: alt.Player, email: string, password: string): Promise<EventResult> {
     const account = await db.get<Account>({ email }, Rebar.database.CollectionNames.Accounts);
     if (!account) {
         return { success: false, error: 'Account not found' };

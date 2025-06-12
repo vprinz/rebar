@@ -4,7 +4,7 @@ import { useForm, useField } from 'vee-validate';
 import * as yup from 'yup';
 
 import { useEvents } from '@Composables/useEvents.js';
-import { AuthResult } from '../../shared/types.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 import { AuthEvents } from '../../shared/authEvents';
 
 const events = useEvents();
@@ -30,7 +30,7 @@ const serverError = ref('');
 const onSubmit = handleSubmit(async (values) => {
     serverError.value = '';
 
-    const result: AuthResult = await events.emitServerRpc(AuthEvents.toServer.register, values.email, values.password);
+    const result: EventResult = await events.emitServerRpc(AuthEvents.toServer.register, values.email, values.password);
     if (!result.success) {
         serverError.value = result.error || 'An unknown error occurred';
         return;

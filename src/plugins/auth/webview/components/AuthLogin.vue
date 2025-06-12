@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useEvents } from '@Composables/useEvents.js';
-import { AuthResult } from '../../shared/types.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 import { AuthEvents } from '../../shared/authEvents';
 
 const events = useEvents();
@@ -12,7 +12,7 @@ const serverError = ref('');
 
 const onSubmit = async () => {
     serverError.value = '';
-    const result: AuthResult = await events.emitServerRpc(AuthEvents.toServer.login, email.value, password.value);
+    const result: EventResult = await events.emitServerRpc(AuthEvents.toServer.login, email.value, password.value);
     if (!result.success) {
         serverError.value = result.error || 'Invalid email or password';
         return;
