@@ -81,7 +81,7 @@ const onSubmit = handleSubmit(async (values) => {
                     id="lastName"
                     v-model="lastName"
                     type="text"
-                    placeholder="Enter you last name"
+                    placeholder="Enter your last name"
                     class="input input-bordered"
                     required
                 />
