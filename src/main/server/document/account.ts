@@ -150,19 +150,21 @@ export function useAccount(player: alt.Player) {
     /**
      * Return a specific character by their ID.
      *
-     * @param {string} characterId
+     * @param {string | number} characterId
      * @return {Promise<Character | undefined>}
      */
-    async function getCharacter(characterId: string): Promise<Character | undefined> {
+    async function getCharacter(characterId: string | number): Promise<Character | undefined> {
         const accountData = get();
         if (!accountData || !accountData._id) return undefined;
-        const character = await db.get<Character>(
-            {
-                account_id: accountData._id,
-                _id: characterId,
-            },
-            CollectionNames.Characters,
-        );
+
+        const filter: any = { account_id: accountData._id };
+        if (typeof characterId === 'string') {
+            filter._id = characterId;
+        } else {
+            filter.id = characterId;
+        }
+
+        const character = await db.get<Character>(filter, CollectionNames.Characters);
         return character || undefined;
     }
 

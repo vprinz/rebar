@@ -13,7 +13,7 @@ function handlePopulateCharacters(_characters: Character[]) {
     characters.value = _characters;
 }
 
-async function spawnCharacter(characterId: string) {
+async function spawnCharacter(characterId: number) {
     await events.emitServerRpc(CharacterEvents.toServer.spawnCharacter, characterId);
 }
 
@@ -61,7 +61,7 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                             </div>
                         </td>
                         <th>
-                            <button @click="spawnCharacter(character._id)" class="btn btn-primary btn-xs">spawn</button>
+                            <button @click="spawnCharacter(character.id)" class="btn btn-primary btn-xs">spawn</button>
                         </th>
                     </tr>
                 </tbody>

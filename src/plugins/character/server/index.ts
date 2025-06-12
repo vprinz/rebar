@@ -44,17 +44,11 @@ async function handleCharacterCreation(
     return { success: true };
 }
 
-async function handleSpawnCharacter(player: alt.Player, characterId: string) {
+async function handleSpawnCharacter(player: alt.Player, characterId: string | number): Promise<void> {
     const accDocument = getValidAccountOrKick(player);
     if (!accDocument.isValid()) return;
 
-    const character = await db.get<Character>(
-        {
-            account_id: accDocument.getField('_id'),
-            _id: characterId,
-        },
-        CollectionNames.Characters,
-    );
+    const character = await accDocument.getCharacter(characterId);
 
     Rebar.document.character.useCharacterBinder(player).bind(character);
     Rebar.player.useWebview(player).hide('Character');
