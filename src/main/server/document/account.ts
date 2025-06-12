@@ -148,6 +148,25 @@ export function useAccount(player: alt.Player) {
     }
 
     /**
+     * Return a specific character by their ID.
+     *
+     * @param {string} characterId
+     * @return {Promise<Character | undefined>}
+     */
+    async function getCharacter(characterId: string): Promise<Character | undefined> {
+        const accountData = get();
+        if (!accountData || !accountData._id) return undefined;
+        const character = await db.get<Character>(
+            {
+                account_id: accountData._id,
+                _id: characterId,
+            },
+            CollectionNames.Characters,
+        );
+        return character || undefined;
+    }
+
+    /**
      * Return all characters that belong to this account
      *
      * @return {Promise<Character[]>}
@@ -212,6 +231,7 @@ export function useAccount(player: alt.Player) {
         groups,
         addIdentifier,
         get,
+        getCharacter,
         getCharacters,
         getField,
         isValid,
