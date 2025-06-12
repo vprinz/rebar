@@ -56,7 +56,7 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="character in characters">
+                    <tr v-for="character in characters" :key="character._id">
                         <th>
                             <label>
                                 <input
