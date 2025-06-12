@@ -112,9 +112,10 @@ const onSubmit = handleSubmit(async (values) => {
                     {{ serverError }}
                 </div>
                 <button type="submit" class="btn btn-primary">Save and Spawn</button>
-                <button @click="$emit('navigate', 'character-list')" type="button" class="btn btn-sm btn-ghost">
-                    Back
-                </button>
+                <!--                FIXME: show correct list of character after returning back-->
+                <!--                <button @click="$emit('navigate', 'character-list')" type="button" class="btn btn-sm btn-ghost">-->
+                <!--                    Back-->
+                <!--                </button>-->
             </div>
         </div>
     </form>

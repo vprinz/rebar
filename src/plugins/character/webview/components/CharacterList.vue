@@ -3,11 +3,14 @@ import { ref } from 'vue';
 
 import { Character } from '@Shared/types/index.js';
 import { useEvents } from '@Composables/useEvents.js';
+import { EventResult } from '@Shared/types/eventResult.js';
 
 import { CharacterEvents } from '../../shared/characterEvents.js';
 
 const events = useEvents();
 const characters = ref<Character[]>([]);
+const selectedCharacterId = ref<string>('');
+const serverError = ref('');
 
 function handlePopulateCharacters(_characters: Character[]) {
     characters.value = _characters;
@@ -15,6 +18,17 @@ function handlePopulateCharacters(_characters: Character[]) {
 
 async function spawnCharacter(characterId: number) {
     await events.emitServerRpc(CharacterEvents.toServer.spawnCharacter, characterId);
+}
+
+async function deleteCharacter() {
+    console.log('Deleting character with ID:', selectedCharacterId.value);
+    const result: EventResult = await events.emitServerRpc(
+        CharacterEvents.toServer.deleteCharacter,
+        selectedCharacterId.value,
+    );
+    if (!result.success) {
+        serverError.value = 'An error occurred while deleting the character';
+    }
 }
 
 function getInitials(name: string): string {
@@ -45,7 +59,12 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                     <tr v-for="character in characters">
                         <th>
                             <label>
-                                <input type="checkbox" class="checkbox" />
+                                <input
+                                    v-model="selectedCharacterId"
+                                    :value="character._id"
+                                    type="radio"
+                                    class="radio"
+                                />
                             </label>
                         </th>
                         <td>
@@ -66,11 +85,18 @@ events.on(CharacterEvents.toClient.populateCharacters, handlePopulateCharacters)
                     </tr>
                 </tbody>
             </table>
+            <div v-if="serverError" class="mt-4 text-center text-xs text-red-500">{{ serverError }}</div>
             <div class="mt-4 flex justify-end gap-3">
                 <button @click="$emit('navigate', 'character-create')" class="btn btn-ghost btn-sm">
                     Add new character
                 </button>
-                <button disabled class="btn btn-ghost btn-sm text-red-500">Delete</button>
+                <button
+                    @click="deleteCharacter"
+                    :disabled="!selectedCharacterId"
+                    class="btn btn-ghost btn-sm text-red-500"
+                >
+                    Delete
+                </button>
             </div>
         </template>
 

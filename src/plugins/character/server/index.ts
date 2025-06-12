@@ -58,6 +58,12 @@ async function handleSpawnCharacter(player: alt.Player, characterId: string | nu
     player.emit(AuthEvents.toClient.cameraDestroy);
 }
 
+async function handleDeleteCharacter(player: alt.Player, characterDocId: string): Promise<EventResult> {
+    const result = await db.deleteDocument(characterDocId, CollectionNames.Characters);
+    await showCharacterSelection(player);
+    return { success: result };
+}
+
 function getValidAccountOrKick(player: alt.Player) {
     const accDocument = Rebar.document.account.useAccount(player);
     if (!accDocument.isValid()) {
@@ -74,6 +80,7 @@ async function init() {
 
     alt.onRpc(CharacterEvents.toServer.createCharacter, handleCharacterCreation);
     alt.onRpc(CharacterEvents.toServer.spawnCharacter, handleSpawnCharacter);
+    alt.onRpc(CharacterEvents.toServer.deleteCharacter, handleDeleteCharacter);
 }
 
 await init();
