@@ -21,7 +21,6 @@ async function spawnCharacter(characterId: number) {
 }
 
 async function deleteCharacter() {
-    console.log('Deleting character with ID:', selectedCharacterId.value);
     const result: EventResult = await events.emitServerRpc(
         CharacterEvents.toServer.deleteCharacter,
         selectedCharacterId.value,
