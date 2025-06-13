@@ -11,7 +11,7 @@ const { messages, emit } = useMessenger();
 
 const input = ref('');
 const inputBox = ref<HTMLInputElement | null>(null);
-const chatBox = ref<HTMLInputElement | null>(null);
+const chatBox = ref<HTMLDivElement | null>(null);
 const timestamp = ref(true);
 const focused = ref(false);
 

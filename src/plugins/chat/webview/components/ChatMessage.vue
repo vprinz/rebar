@@ -51,7 +51,7 @@ const content = computed(() => {
 
 <template>
     <div class="text-shadow" :class="classes">
-        <span v-html="content"></span>
+        <span v-text="content"></span>
     </div>
 </template>
 
