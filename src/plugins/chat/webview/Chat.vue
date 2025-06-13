@@ -13,7 +13,7 @@ const input = ref('');
 const inputBox = ref<HTMLInputElement | null>(null);
 const chatBox = ref<HTMLInputElement | null>(null);
 const timestamp = ref(true);
-const focused = ref(true);
+const focused = ref(false);
 
 const chatMessages = computed(() => {
     if (messages.value.length < ChatConfig.messagesPerPage) {
@@ -66,18 +66,21 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="fixed left-6 top-6 flex flex-col gap-6">
+    <div class="fixed left-6 top-6 flex flex-col gap-6" :class="focused ? '' : 'pointer-events-none'">
         <div
             class="flip-left flex max-h-[448px] min-h-[448px] min-w-[448px] max-w-[448px] flex-col gap-4 overflow-y-auto pl-3"
             ref="chatBox"
         >
-            <ChatMessage v-for="(msg, idx) in chatMessages" :key="idx" :message="msg" :timestamp="timestamp" />
+            <ChatMessage
+                v-for="(message, index) in chatMessages"
+                :key="index"
+                :message="message"
+                :timestamp="timestamp"
+                class="text-md flip-right break-words font-bold tracking-wider"
+            />
         </div>
         <div class="flex w-full flex-col gap-4">
-            <label
-                class="input input-bordered flex items-center gap-2"
-                :class="focused ? ['opacity-85'] : ['opacity-0']"
-            >
+            <label class="input input-bordered flex items-center gap-2" :class="focused ? 'opacity-85' : 'opacity-0'">
                 <input
                     :max="ChatConfig.inputLength"
                     v-model="input"
@@ -91,3 +94,22 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+}
+
+.flip-left {
+    direction: rtl;
+}
+
+.flip-right {
+    direction: ltr;
+}
+</style>

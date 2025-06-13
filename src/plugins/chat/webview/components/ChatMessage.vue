@@ -50,7 +50,7 @@ const content = computed(() => {
 </script>
 
 <template>
-    <div class="text-shadow font-bold tracking-wider" :class="classes">
+    <div class="text-shadow" :class="classes">
         <span v-html="content"></span>
     </div>
 </template>
