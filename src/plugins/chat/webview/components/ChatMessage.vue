@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { Message } from '@Shared/types/message';
 import { formatTimestamp } from '@Shared/utility/time';
-// import { ChatConfig } from '../../shared/config';
+import { ChatConfig } from '../../shared/config';
 
 const props = defineProps<{ message: Message; timestamp?: boolean }>();
 
@@ -41,9 +41,9 @@ const content = computed(() => {
 
     content += ' ' + props.message.content;
 
-    // if (content.length > ChatConfig.inputLength) {
-    //     content = content.slice(0, ChatConfig.inputLength) + '...';
-    // }
+    if (content.length > ChatConfig.inputLength) {
+        content = content.slice(0, ChatConfig.inputLength) + '...';
+    }
 
     return content;
 });
