@@ -21,6 +21,22 @@ export function usePermissions(player: alt.Player) {
         return false;
     };
 
+    const isInGroup = (group: string): boolean => {
+        if (account.isValid()) {
+            if (account.groups.memberOf(group)) {
+                return true;
+            }
+        }
+
+        if (character.isValid()) {
+            if (character.groups.memberOf(group)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
     const listAllPermissions = (): string[] => {
         const characterPermissions = character.permissions.list();
         const accountPermissions = account.permissions.list();
@@ -29,6 +45,7 @@ export function usePermissions(player: alt.Player) {
 
     return {
         hasPermission,
+        isInGroup,
         listAllPermissions,
         account: {
             permissions: account.permissions,

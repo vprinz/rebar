@@ -6,7 +6,6 @@ export interface PermissionsDocumentMixin {
     permissions?: string[];
 }
 
-
 export interface GroupsDocumentMixin {
     /**
      * The groups associated with this document.
@@ -16,9 +15,14 @@ export interface GroupsDocumentMixin {
 }
 
 export type Permission = string | string[] | PermissionLogic;
-type PermissionLogic = And | Or;
-type And = { and: Permission[] };
-type Or = { or: Permission[] };
+type PermissionLogic = AndPermission | OrPermission;
+type AndPermission = { and: Permission[] };
+type OrPermission = { or: Permission[] };
+
+export type Group = string | string[] | GroupLogic;
+type GroupLogic = AndGroup | OrGroup;
+type AndGroup = { and: Group[] };
+type OrGroup = { or: Group[] };
 
 export interface PermissionOptions {
     /**
@@ -27,4 +31,10 @@ export interface PermissionOptions {
      * @type {Permission}
      */
     permissions?: Permission;
+
+    /**
+     * Groups required to access this command.
+     * @type {Group}
+     */
+    groups?: Group;
 }
