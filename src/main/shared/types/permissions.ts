@@ -24,7 +24,7 @@ type GroupLogic = AndGroup | OrGroup;
 type AndGroup = { and: Group[] };
 type OrGroup = { or: Group[] };
 
-export interface PermissionOptions {
+export interface AccessOptions {
     /**
      * Permissions required to access this entity.
      *

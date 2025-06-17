@@ -1,9 +1,9 @@
 import * as alt from 'alt-server';
 import { useWebview } from '../player/webview.js';
 import { useStatus } from '../player/status.js';
-import {Events} from '@Shared/events/index.js';
-import {Message, PermissionOptions} from '@Shared/types/index.js';
-import {useEntityPermissions} from "@Server/systems/permissions/entityPermissions.js";
+import { Events } from '@Shared/events/index.js';
+import { Message, AccessOptions } from '@Shared/types/index.js';
+import { useEntityPermissions } from '@Server/systems/permissions/entityPermissions.js';
 
 declare module 'alt-server' {
     export interface ICustomEmitEvent {
@@ -15,7 +15,7 @@ declare module 'alt-server' {
 export type Command = {
     name: string;
     desc: string;
-    options?: PermissionOptions;
+    options?: AccessOptions;
     callback: (player: alt.Player, ...args: string[]) => void | boolean | Promise<void> | Promise<boolean>;
 };
 
@@ -86,7 +86,7 @@ export function useMessenger() {
         webview.emit(Events.systems.messenger.send, message);
     }
 
-    function broadcastMessage(message: Message, options?: PermissionOptions) {
+    function broadcastMessage(message: Message, options?: AccessOptions) {
         for (const player of alt.Player.all) {
             if (!options || useEntityPermissions(options).check(player)) {
                 sendMessage(player, message);

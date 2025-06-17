@@ -7,12 +7,12 @@ title: useEntityPermissions
 
 This function allows you to easily integrate permission system into your feature.
 
-It checks if player has a permission to perform an action on an entity, which type was extended from `PermissionOptions`.
+It checks if player has a permission to perform an action on an entity, which type was extended from `AccessOptions`.
 
 ```typescript
-import { PermissionOptions } from '@Shared/types/index.js';
+import { AccessOptions } from '@Shared/types/index.js';
 
-export interface MyEntity extends PermissionOptions {
+export interface MyEntity extends AccessOptions {
     // your entity properties
 }
 ```

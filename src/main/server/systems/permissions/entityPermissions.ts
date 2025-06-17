@@ -1,5 +1,5 @@
 import * as alt from 'alt-server';
-import { Group, Permission, PermissionOptions } from '@Shared/types/index.js';
+import { Group, Permission, AccessOptions } from '@Shared/types/index.js';
 import { usePermissions } from '@Server/systems/permissions/usePermissions.js';
 
 function evaluateAccess(access: Permission | Group, hasAccess: (value: string) => boolean): boolean {
@@ -17,7 +17,7 @@ function evaluateAccess(access: Permission | Group, hasAccess: (value: string) =
     return false;
 }
 
-export function useEntityPermissions<T extends PermissionOptions>(entity: T) {
+export function useEntityPermissions<T extends AccessOptions>(entity: T) {
     function check(player: alt.Player): boolean {
         const permissions = usePermissions(player);
         const hasPerm = evaluateAccess(entity.permissions, (perm) => permissions.hasPermission(perm));
