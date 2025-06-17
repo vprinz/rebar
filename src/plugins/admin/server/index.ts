@@ -7,7 +7,7 @@ const groups = Rebar.permissions.usePermissionGroup();
 
 const ADMIN_LIST = ['vprinz.me@gmail.com'];
 const ADMIN_GROUP = 'admin';
-const ADMIN_PERMISSIONS = ['id', 'pos', 'kick', 'ban'];
+const ADMIN_PERMISSIONS = ['veh'];
 
 await groups.add(ADMIN_GROUP, {
     permissions: ADMIN_PERMISSIONS,
