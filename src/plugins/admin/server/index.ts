@@ -1,11 +1,12 @@
 import { useRebar } from '@Server/index.js';
 import * as alt from 'alt-server';
+import './commands.js';
 
 const Rebar = useRebar();
 const api = Rebar.useApi();
 const groups = Rebar.permissions.usePermissionGroup();
 
-const ADMIN_LIST = ['vprinz.me@gmail.com'];
+const ADMIN_LIST = ['vokler98@gmail.com'];
 const ADMIN_GROUP = 'admin';
 const ADMIN_PERMISSIONS = ['veh'];
 
@@ -15,14 +16,16 @@ await groups.add(ADMIN_GROUP, {
 
 async function setupAdmin(player: alt.Player) {
     const account = Rebar.document.account.useAccount(player);
-    if (!account.isValid()) {
-        player.kick('Account not found');
-        return;
-    }
+    if (!account.isValid()) return;
 
     const accountEmail = account.getField('email');
-    if (ADMIN_LIST.includes(accountEmail) && !account.groups.memberOf(ADMIN_GROUP)) {
-        account.groups.add(ADMIN_GROUP);
+    const isInAdminList = ADMIN_LIST.includes(accountEmail);
+    const isMemberOfAdminGroup = account.groups.memberOf(ADMIN_GROUP);
+
+    if (isInAdminList && !isMemberOfAdminGroup) {
+        await account.groups.add(ADMIN_GROUP);
+    } else if (!isInAdminList && isMemberOfAdminGroup) {
+        await account.groups.remove(ADMIN_GROUP);
     }
 }
 

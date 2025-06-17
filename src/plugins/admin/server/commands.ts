@@ -7,6 +7,9 @@ const Messenger = Rebar.messenger.useMessenger();
 Messenger.commands.register({
     name: 'veh',
     desc: '[model] - Create a vehicle',
+    options: {
+        groups: ['admin'],
+    },
     callback: async (player, model: string) => {
         const posInFrontOfPlayer = Rebar.utility.vector.getVectorInFrontOfPlayer(player, 5);
         new alt.Vehicle(model, posInFrontOfPlayer, alt.Vector3.zero);
