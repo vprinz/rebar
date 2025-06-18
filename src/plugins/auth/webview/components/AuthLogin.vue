@@ -8,11 +8,17 @@ const events = useEvents();
 
 const email = ref('');
 const password = ref('');
+const rememberMe = ref(false);
 const serverError = ref('');
 
 const onSubmit = async () => {
     serverError.value = '';
-    const result: EventResult = await events.emitServerRpc(AuthEvents.toServer.login, email.value, password.value);
+    const result: EventResult = await events.emitServerRpc(
+        AuthEvents.toServer.login,
+        email.value,
+        password.value,
+        rememberMe.value,
+    );
     if (!result.success) {
         serverError.value = result.error || 'Invalid email or password';
         return;
@@ -49,6 +55,12 @@ const onSubmit = async () => {
                     class="input input-bordered"
                     required
                 />
+            </div>
+            <div class="form-control mb-2">
+                <label class="label cursor-pointer">
+                    <span class="label-text">Remember me</span>
+                    <input type="checkbox" v-model="rememberMe" class="checkbox checkbox-primary" />
+                </label>
             </div>
             <div v-if="serverError" class="mb-2 text-center text-xs text-red-500">
                 {{ serverError }}

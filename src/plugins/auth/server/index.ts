@@ -12,11 +12,17 @@ const db = Rebar.database.useDatabase();
 const loginCallbacks: Array<(player: alt.Player) => void> = [];
 const loggedInPlayers: Map<number, string> = new Map<number, string>();
 
+type AccountData = { token: string } & Account;
+
 async function handleConnect(player: alt.Player) {
+    const didLogin = await tryRememberMe(player);
+    if (!didLogin) {
+        Rebar.player.useWebview(player).show('Auth', 'page');
+    }
+
     player.dimension = player.id + 1;
     ServerConfig.set('hideMinimapInPage', true);
     player.emit(AuthEvents.toClient.cameraCreate);
-    Rebar.player.useWebview(player).show('Auth', 'page');
     Rebar.player.useNative(player).invoke('triggerScreenblurFadeIn', 1000);
 }
 
@@ -58,7 +64,12 @@ async function handleRegister(player: alt.Player, email: string, password: strin
     return { success: true };
 }
 
-async function handleLogin(player: alt.Player, email: string, password: string): Promise<EventResult> {
+async function handleLogin(
+    player: alt.Player,
+    email: string,
+    password: string,
+    rememberMe: boolean,
+): Promise<EventResult> {
     const account = await db.get<Account>({ email }, Rebar.database.CollectionNames.Accounts);
     if (!account) {
         return { success: false, error: 'Account not found' };
@@ -72,9 +83,34 @@ async function handleLogin(player: alt.Player, email: string, password: string):
         return { success: false, error: 'Account already logged in' };
     }
 
+    if (rememberMe) {
+        await updateRememberMe(player, account._id);
+    }
+
     setAccount(player, account);
 
     return { success: true };
+}
+
+function getHash(player: alt.Player) {
+    return Rebar.utility.sha256(
+        player.ip + player.hwidHash + player.hwidExHash + player.socialID + player.socialClubName,
+    );
+}
+
+async function tryRememberMe(player: alt.Player): Promise<boolean> {
+    const token = getHash(player);
+    const account = await db.get<AccountData>({ token }, Rebar.database.CollectionNames.Accounts);
+    if (!account) {
+        return false;
+    }
+
+    setAccount(player, account);
+    return true;
+}
+
+async function updateRememberMe(player: alt.Player, _id: string) {
+    await db.update<AccountData>({ _id, token: getHash(player) }, Rebar.database.CollectionNames.Accounts);
 }
 
 alt.on('playerConnect', handleConnect);
