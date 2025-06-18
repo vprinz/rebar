@@ -1,38 +1,57 @@
 import { useRebar } from '@Server/index.js';
 import * as alt from 'alt-server';
-import './commands.js';
+import { Groups, Permissions } from '@Shared/data/permissions.js';
+import { Commands } from '@Shared/data/commands.js';
 
 const Rebar = useRebar();
-const api = Rebar.useApi();
-const groups = Rebar.permissions.usePermissionGroup();
+const Messenger = Rebar.messenger.useMessenger();
+const Group = Rebar.permissions.usePermissionGroup();
 
-const ADMIN_LIST = ['vokler98@gmail.com'];
-const ADMIN_GROUP = 'admin';
-const ADMIN_PERMISSIONS = ['veh'];
-
-await groups.add(ADMIN_GROUP, {
-    permissions: ADMIN_PERMISSIONS,
+await Group.add(Groups.ADMIN, {
+    permissions: Permissions.ADMIN,
 });
 
-async function setupAdmin(player: alt.Player) {
-    const account = Rebar.document.account.useAccount(player);
-    if (!account.isValid()) return;
+Messenger.commands.register({
+    name: Commands.VEH.name,
+    desc: Commands.VEH.desc,
+    options: {
+        groups: [Groups.ADMIN],
+    },
+    callback: async (player, model: string) => {
+        const posInFrontOfPlayer = Rebar.utility.vector.getVectorInFrontOfPlayer(player, 5);
+        new alt.Vehicle(model, posInFrontOfPlayer, alt.Vector3.zero);
+    },
+});
 
-    const accountEmail = account.getField('email');
-    const isInAdminList = ADMIN_LIST.includes(accountEmail);
-    const isMemberOfAdminGroup = account.groups.memberOf(ADMIN_GROUP);
+Messenger.commands.register({
+    name: Commands.WEAPON.name,
+    desc: Commands.WEAPON.desc,
+    options: {
+        groups: [Groups.ADMIN],
+    },
+    callback: async (player, model: string) => {
+        player.giveWeapon(model, -1, true);
+    },
+});
 
-    if (isInAdminList && !isMemberOfAdminGroup) {
-        await account.groups.add(ADMIN_GROUP);
-    } else if (!isInAdminList && isMemberOfAdminGroup) {
-        await account.groups.remove(ADMIN_GROUP);
-    }
-}
+Messenger.commands.register({
+    name: Commands.POS.name,
+    desc: Commands.POS.desc,
+    options: {
+        groups: [Groups.ADMIN],
+    },
+    callback: async (player) => {
+        alt.log(player.pos.toString());
+    },
+});
 
-async function init() {
-    await alt.Utils.waitFor(() => api.isReady('auth-api'), 30000);
-    const auth = api.get('auth-api');
-    auth.onLogin(setupAdmin);
-}
-
-await init();
+Messenger.commands.register({
+    name: Commands.SKIN.name,
+    desc: Commands.SKIN.desc,
+    options: {
+        groups: [Groups.ADMIN],
+    },
+    callback: async (player, model: string) => {
+        player.model = model;
+    },
+});
