@@ -15,4 +15,8 @@ export const Commands = {
         name: 'skin',
         desc: '[model] - Change the skin of the player',
     },
+    TPWP: {
+        name: 'tpwp',
+        desc: 'Teleport to a waypoint',
+    },
 };

@@ -14,9 +14,7 @@ await Group.add(Groups.ADMIN, {
 Messenger.commands.register({
     name: Commands.VEH.name,
     desc: Commands.VEH.desc,
-    options: {
-        groups: [Groups.ADMIN],
-    },
+    options: { groups: [Groups.ADMIN] },
     callback: async (player, model: string) => {
         const posInFrontOfPlayer = Rebar.utility.vector.getVectorInFrontOfPlayer(player, 5);
         new alt.Vehicle(model, posInFrontOfPlayer, alt.Vector3.zero);
@@ -26,9 +24,7 @@ Messenger.commands.register({
 Messenger.commands.register({
     name: Commands.WEAPON.name,
     desc: Commands.WEAPON.desc,
-    options: {
-        groups: [Groups.ADMIN],
-    },
+    options: { groups: [Groups.ADMIN] },
     callback: async (player, model: string) => {
         player.giveWeapon(model, -1, true);
     },
@@ -37,9 +33,7 @@ Messenger.commands.register({
 Messenger.commands.register({
     name: Commands.POS.name,
     desc: Commands.POS.desc,
-    options: {
-        groups: [Groups.ADMIN],
-    },
+    options: { groups: [Groups.ADMIN] },
     callback: async (player) => {
         alt.log(player.pos.toString());
     },
@@ -48,10 +42,22 @@ Messenger.commands.register({
 Messenger.commands.register({
     name: Commands.SKIN.name,
     desc: Commands.SKIN.desc,
-    options: {
-        groups: [Groups.ADMIN],
-    },
+    options: { groups: [Groups.ADMIN] },
     callback: async (player, model: string) => {
         player.model = model;
+    },
+});
+
+Messenger.commands.register({
+    name: Commands.TPWP.name,
+    desc: Commands.TPWP.desc,
+    options: { groups: [Groups.ADMIN] },
+    callback: async (player: alt.Player) => {
+        const pos = await Rebar.player.useWaypoint(player).get();
+        if (!pos) {
+            return;
+        }
+
+        player.pos = pos;
     },
 });
