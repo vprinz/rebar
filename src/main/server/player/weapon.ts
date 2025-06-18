@@ -88,7 +88,7 @@ export function useWeapon(player: alt.Player) {
      * Add a weapon to the player
      *
      * @param {string | number} model
-     * @param {number} ammo
+     * @param {number} ammoCount
      * @return
      */
     async function add(model: string | number, ammoCount: number) {

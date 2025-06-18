@@ -17,7 +17,7 @@ Messenger.commands.register({
     name: 'weapon',
     desc: 'Give a weapon to player',
     callback: async (player, model: string) => {
-        player.giveWeapon(model, -1, true);
+        await Rebar.player.useWeapon(player).add(model, 9999);
     },
 });
 
@@ -33,7 +33,7 @@ Messenger.commands.register({
     name: 'skin',
     desc: 'Change player skin',
     callback: async (player, model: string) => {
-        player.model = model;
+        await Rebar.player.useClothing(player).setSkin(model);
     },
 });
 
