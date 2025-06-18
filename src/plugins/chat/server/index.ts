@@ -2,6 +2,7 @@ import * as alt from 'alt-server';
 import { useRebar } from '@Server/index.js';
 import * as Utility from '@Shared/utility/index.js';
 import './api.js';
+import './commands.js';
 
 import { ChatConfig } from '../shared/config.js';
 

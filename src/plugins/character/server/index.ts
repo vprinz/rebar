@@ -11,7 +11,7 @@ const Rebar = useRebar();
 const api = Rebar.useApi();
 const db = Rebar.database.useDatabase();
 
-const spawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
+const defaultSpawnPosition = new alt.Vector3({ x: -864.1, y: -172.6, z: 37.8 });
 
 async function showCharacterSelection(player: alt.Player) {
     const accDocument = getValidAccountOrKick(player);
@@ -49,6 +49,7 @@ async function handleSpawnCharacter(player: alt.Player, characterId: string | nu
     if (!accDocument.isValid()) return;
 
     const character = await accDocument.getCharacter(characterId);
+    const spawnPosition = character.pos || defaultSpawnPosition;
 
     Rebar.document.character.useCharacterBinder(player).bind(character);
     Rebar.player.useWebview(player).hide('Character');
