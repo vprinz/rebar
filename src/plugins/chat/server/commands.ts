@@ -49,3 +49,11 @@ Messenger.commands.register({
         player.pos = pos;
     },
 });
+
+Messenger.commands.register({
+    name: 'givemoney',
+    desc: 'Give money to player',
+    callback: async (player: alt.Player, currencyType: string, amount: string) => {
+        const result = await Rebar.services.useCurrencyService().add(player, currencyType, Number(amount));
+    },
+});
