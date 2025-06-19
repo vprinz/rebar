@@ -22,6 +22,12 @@ export interface CurrencyService {
      * @memberof CurrencyService
      */
     has: (player: alt.Player, type: string, quantity: number) => Promise<boolean>;
+    /**
+     * Called when you want to get the current amount of a currency type
+     *
+     * @memberof CurrencyService
+     */
+    get: (player: alt.Player, type: string) => Promise<number>;
 }
 
 declare global {
@@ -72,6 +78,20 @@ export function useCurrencyService() {
             }
 
             return service.has(...args);
+        },
+        get(...args: Parameters<CurrencyService['get']>) {
+            const service = useServiceRegister().get('currencyService');
+            if (!service || !service.get) {
+                return 0;
+            }
+
+            const result = service.get(...args);
+
+            if (result) {
+                alt.emit('rebar:playerCurrencyGet', ...args);
+            }
+
+            return result;
         },
     };
 }
